@@ -3,8 +3,6 @@ on:
   push:
     branches:
     - main
-    paths:
-    - 'front-end-nextjs/Dockerfile'
 
 jobs:
   Build_and_publish_images:
