@@ -17,7 +17,11 @@ jobs:
     - name: build image
       run: docker build -t obinnanwaneri/docker-frontend:lastest ./
 
+    - name: log in to Docker Hub
+      uses: docker/login-action@v3
+      with: # This references the secret created in GitHub settings
+        username: obinnanwaneri
+        password: ${{ secrets.obinnanwaneri }}
+
     - name: push images to docker hub
-      run: |
-        docker login -u obinnanwaneri -p ${{ secrets.DOCKERHUB_TOKEN }} https://hub.docker.com/repositories/obinnanwaneri
-        docker push obinnanwaneri/docker-frontend:lastest
+      run: docker push obinnanwaneri/docker-frontend:lastest
