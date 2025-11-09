@@ -32,21 +32,21 @@ jobs:
         password: ${{ secrets.obinnanwaneri }}
         # This references the secret created in GitHub settings
 
-    - name: Step 4 - Extract metadata (tags) for Docker
-      id: meta
+    #- name: Step 4 - Extract metadata (tags) for Docker
+      #id: meta
       # Assigns an ID (meta) to this step. 
       # This allows subsequent steps to easily reference the tags this step calculates.
 
-      uses: docker/metadata-action@v5
+      #uses: docker/metadata-action@v5
       # This action extracts Git and GitHub event data 
       # This automatically generates properly formatted Docker tags.
 
-      with:
-        images: obinnanwaneri/frontend
+      #with:
+        #images: obinnanwaneri/frontend
         # This defines the input for the action
         # References the image using the Docker Hub username/repo-name
           
-        tags: type=sha, prefix=, suffix=, enable=true
+        #tags: type=sha, prefix=, suffix=, enable=true
         # This defines the dynamic tags to generate
         # Instructs the action to create a tag using the short Git commit SHA
 
@@ -64,5 +64,6 @@ jobs:
         push: true
         # Instructs the action to push the sbuilt image to the authenticated (Docker Hub)
 
-        tags: ${{ steps.meta.outputs.tags }}
+        #tags:
+        tags: ${{ github.sha }}
         # This retrieves the list of tags generated in Step 4 and applies them to the image before pushing.
