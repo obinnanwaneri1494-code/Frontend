@@ -19,5 +19,5 @@ jobs:
 
     - name: push images to docker hub
       run: |
-        docker login -u obinnanwaneri -p ${{secrets.DOCKERHUB_TOKEN}}
+        docker login -u obinnanwaneri -p ${{ secrets.DOCKERHUB_TOKEN }}
         docker push obinnanwaneri/docker-frontend:lastest
