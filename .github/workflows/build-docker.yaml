@@ -3,38 +3,66 @@ on:
   push:
     branches:
     - main
+    # This triggers the workflow on every push to the main branch
 
 jobs:
   Build_and_publish_images:
+
     runs-on: ubuntu-22.04
+    # Tells GitHub to provision a temporary, virtual machine (the "runner") to execute the steps. 
+    # This specified runner is to use the Ubuntu 22.04 operating system.
+    
     steps:
-    - name: confimation
+    - name: Step 1 - confimation
       run: echo "running CI/CD"
+      # This echos "running CI/CD" to confirm the job has started.
 
-    - name: checkout
+    - name: Step 2 - clones the repo onto the runner machine
       uses: actions/checkout@v4
+      # This clones the entire repository content. 
+      # It downloads the (source codes, Dockerfile, etc.) onto the temporary runner machine.
 
-    - name: log in to Docker Hub
+    - name: Step 3 - log in to Docker Hub
       uses: docker/login-action@v3
-      with: # This references the secret created in GitHub settings
+      # The official, secure action for authenticating to Docker Hub (the default registry). 
+      # This action handles the sensitive docker login command securely.
+
+      with: 
         username: obinnanwaneri
         password: ${{ secrets.obinnanwaneri }}
-      
-    - name: Extract metadata (tags) for Docker
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        # Your Docker Hub username/repo-name
-        images: obinnanwaneri/frontend
-          
-        # Define the dynamic tags to generate
-        tags: |
-          type=sha, prefix=, suffix=, enable=true
+        # This references the secret created in GitHub settings
 
-    - name: Build and push Docker image
+    - name: Step 4 - Extract metadata (tags) for Docker
+      id: meta
+      # Assigns an ID (meta) to this step. 
+      # This allows subsequent steps to easily reference the tags this step calculates.
+
+      uses: docker/metadata-action@v5
+      # This action extracts Git and GitHub event data 
+      # This automatically generates properly formatted Docker tags.
+
+      with:
+        images: obinnanwaneri/frontend
+        # This defines the input for the action
+        # References the image using the Docker Hub username/repo-name
+          
+        tags: type=sha, prefix=, suffix=, enable=true
+        # This defines the dynamic tags to generate
+        # Instructs the action to create a tag using the short Git commit SHA
+
+    - name: step 5 - Build and push Docker image
       uses: docker/build-push-action@v5
+      # This action handles the docker buildx build command
+      # This uses the build context to create the image
+
       with:
         context: .
+        # Specifies the build context, which is the location of the source files
+        # The . (current directory) means the image will be built using the files checked out in Step 2
+        # The Dockerfile is expected to be in this directory
+
         push: true
-        # Use the output from the metadata step
+        # Instructs the action to push the sbuilt image to the authenticated (Docker Hub)
+
         tags: ${{ steps.meta.outputs.tags }}
+        # This retrieves the list of tags generated in Step 4 and applies them to the image before pushing.
