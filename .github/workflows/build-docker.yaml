@@ -8,9 +8,12 @@ jobs:
   Build_and_publish_images:
     runs-on: ubuntu-lastest
     steps:
+    - name: confimation
+      run: echo "running CI/CD"
+
     - name: checkout
       uses: action/checkout@v4
-
+      
     - name: build image
       run: docker build -t obinnanwaneri/docker-frontend:lastest ./front-end-nextjs
 
