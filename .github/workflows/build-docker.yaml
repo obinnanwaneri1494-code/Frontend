@@ -12,10 +12,21 @@ jobs:
       run: echo "running CI/CD"
 
     - name: checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@
+      
+    - name: Extract metadata (tags) for Docker
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        # Your Docker Hub username/repo-name
+        images: obinnanwaneri/frontend
+          
+        # Define the dynamic tags to generate
+        tags: |
+          type=sha, prefix=, suffix=, enable=true
 
     - name: build image
-      run: docker build -t obinnanwaneri/docker-frontend:lastest ./
+      run: docker build -t obinnanwaneri/docker-frontend:${{ tags }} ./
 
     - name: log in to Docker Hub
       uses: docker/login-action@v3
@@ -24,4 +35,4 @@ jobs:
         password: ${{ secrets.obinnanwaneri }}
 
     - name: push images to docker hub
-      run: docker push obinnanwaneri/docker-frontend:lastest
+      run: docker push obinnanwaneri/docker-frontend:${{ tags }}
